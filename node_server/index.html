@@ -1,100 +1,58 @@
-<!doctype html>
-   	<html>
-	<head>
-		<title>NX Node Demo</title>
-		<script src="/socket.io/socket.io.js"></script>
-		<script type="text/javascript" src="lib/jquery.js"></script>
-		<script type="text/javascript" src="lib/nexusUI.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>NX Node Demo</title>
+	<link rel="stylesheet" type="text/css" href="css/jquery.fullPage.css" />
+	<link rel="stylesheet" type="text/css" href="css/darkadmin.bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/darkadmin.local.css" />
+
+</head>
+<body>
+<div id="fullpage">
 	
-		<script>
-		//window.addEventListener('load', function() {
-
-			//change LOCALHOST to your IP to enable connecting from other devices
-
-			var socket = io.connect('http://192.168.0.7:8080');
-
-			var thisUser = {
-				name: "phone" + Math.floor(Math.random()*10000000000)
-			}
-
-			// on connection to server
-			socket.on('connect', function() {
-				
-				thisUser.gui = new Array()
-
-				for (var i=0;i<nx.nxObjects.length;i++) {
-					thisUser.gui.push({
-						type: nx.nxObjects[i].getName(),
-						x: nx.nxObjects[i].offset.left,
-						y: nx.nxObjects[i].offset.top,
-						width: nx.nxObjects[i].width,
-						height: nx.nxObjects[i].height,
-						oscName: nx.nxObjects[i].oscName
-					})
-					thisUser.gui[i].oscName = thisUser.gui[i].oscName.replace("/","")
-				}
-				console.log(thisUser)
-				socket.emit('adduser', thisUser);
-//evan
-// Whenever the server emits 'new message', update the chat body
-  socket.on('new user', function (data) {
-    console.log(data);
-  });
-//evan
-
-
-			});
-
-
-			nx.onload = function() {
-
-				nx.sendsTo("node")
-
-				tilt1.sendsTo("js")
-
-				tilt1.response = function(data) {
-					data.name = thisUser.name;
-					socket.emit('tiltuser', data)
-				} 
-			
-			};
-		//});		
-		</script>
-		
-	</head>
-	
-	<body>
-			<canvas nx="position" style="width:48%"></canvas>
-			<canvas nx="position" style="width:48%"></canvas>
-			<canvas nx="button" style="width:150px;height:150px"></canvas>
-			<canvas nx="button" style="width:150px;height:150px"></canvas>
-			<canvas nx="button" style="width:150px;height:150px"></canvas>
-			<canvas nx="button" style="width:150px;height:150px"></canvas>
-			<canvas nx="button" style="width:150px;height:150px"></canvas>
-			
-
-			<canvas nx="dial" style="width:150px;height:150px"></canvas>
-			<canvas nx="dial" style="width:150px;height:150px"></canvas>
-			<canvas nx="dial" style="width:150px;height:150px"></canvas>
-			<canvas nx="dial" style="width:150px;height:150px"></canvas>
-			<canvas nx="dial" style="width:150px;height:150px"></canvas>
-
-			<canvas nx="tilt" style="width:150px;height:150px"></canvas>
-			<canvas nx="toggle" style="width:150px;height:150px"></canvas>
-			<canvas nx="toggle" style="width:150px;height:150px"></canvas>
-			<canvas nx="toggle" style="width:150px;height:150px"></canvas>
-			<canvas nx="toggle" style="width:150px;height:150px"></canvas>
-		
-		<div>
-			<canvas nx="slider"></canvas>
-			<canvas nx="slider"></canvas>
-			<canvas nx="slider"></canvas>
-			<canvas nx="multislider"></canvas>
-			<canvas nx="multislider"></canvas>
-
-			<canvas nx="joints" style="width:770px;height:715px"></canvas>
+	<div class="section active" id="section1">
+		<div class="row">
+		  <div class="col-sm-12">
+		    <h1 id="buttons" class="page-header">Buttons</h1>
+		  </div>
 		</div>
+	</div>
+
+	<div class="section" id="section2">
+		<div class="row">
+		  <div class="col-sm-6">
+		    <canvas nx="button" style="width:150px;height:150px"></canvas>
+		  </div>
+		  <div class="col-sm-6">
+		    <canvas nx="button" style="width:150px;height:150px"></canvas>
+		  </div>
+		</div>
+	</div>
+
+	<div class="section" id="section3">
+		<canvas nx="slider"></canvas>
+	</div>
+</div>
+
 	
-	</body>
-	
+	<!-- load js last -->
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+	<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="lib/nexusUI.js"></script>
+
+	<!-- This following line is needed in case of using the default easing option or when using another
+	one rather than "linear" or "swing". You can also add the full jQuery UI instead of this file if you prefer 
+	<script src="js/vendors/jquery.easings.min.js"></script> -->
+	<!-- This following line needed in the case of using the plugin option `scrollOverflow:true` 
+	<script type="text/javascript" src="js/vendors/jquery.slimscroll.min.js"></script> -->
+	<script type="text/javascript" src="js/jquery.fullPage.min.js"></script>
+
+	<script type="text/javascript" src="js/main.js"></script>
+
+</body>
 </html>

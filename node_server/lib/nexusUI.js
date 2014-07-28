@@ -5676,7 +5676,7 @@ function getTemplate(self, target, transmitCommand) {
 			}
 		}
 		self.draw();
-		if (transmit != 'nexusTransmit') {
+		if (transmit != "nexusTransmit") {
 			nx.transmit(self.val)
 		}
 	}
