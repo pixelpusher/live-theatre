@@ -5,25 +5,28 @@
  * - 
  */
 
+//change LOCALHOST to your IP to enable connecting from other devices
+
+//var socket = io.connect('http://192.168.0.7:8080');
+
+var socket = io.connect('http://localhost:8080');
+var thisUser = {
+	name: "phone" + Math.floor(Math.random()*10000000000)
+};
+
+
+
 (function(){
 	// initialize fullpage scrolling plugin
 	$(document).ready(function() {
 		$('#fullpage').fullpage({
-			sectionsColor: ['#000', '#200', '#002']
+			sectionsColor: ['#000', '#200', '#000', '#002', '#000', '#022', '#000','#202'],
 		});
+		// turn of scrolling - this is done by the 'conductor' only
 		$.fn.fullpage.setAllowScrolling(false);
+		$.fn.fullpage.setKeyboardScrolling(false);
 	});
 
-
-	//change LOCALHOST to your IP to enable connecting from other devices
-
-	//var socket = io.connect('http://192.168.0.7:8080');
-
-	var socket = io.connect('http://localhost:8080');
-
-	var thisUser = {
-		name: "phone" + Math.floor(Math.random()*10000000000)
-	}
 
 	// on connection to server
 	socket.on('connect', function() {
@@ -53,7 +56,7 @@
 			// jump to section data using fullpage...
 			$.fn.fullpage.moveTo( index );
 
-		    console.log(data);
+		    console.log(index);
 		});
 	});
 
