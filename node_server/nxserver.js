@@ -13,10 +13,9 @@ var connect = require('connect'),
     io = require('socket.io').listen(app);
     osc = require('node-osc'),
     client = new osc.Client('localhost', 4040);
-    //client = new osc.Client('192.168.2.1', 4040);
     console.log("http server on 8080, osc client on 4040");
 
-console.log(__dirname);
+//console.log(__dirname);
 
 function getIPAddresses() {
 
@@ -42,13 +41,12 @@ io.sockets.on('error', function (data) {
 	}
 );
 
-io.sockets.on('connection', function (socket) {
-// from evan
-  console.log( getIPAddresses() );
+io.sockets.on('connection', function (socket) 
+{
+    // from evan
+    console.log( getIPAddresses() );
 
     socket.on('nx', function (data) {
-//evan	
-//console.log(data);
       client.send(data.oscName, data.value);
     });
 
@@ -57,18 +55,22 @@ io.sockets.on('connection', function (socket) {
       io.sockets.emit('tovispage', data);
     });
 
-    socket.on('adduser', function (data) {
-//evan
-//console.log(data);
+    // when jumpAllTo msg received from conductor, move all clients to the scroll index
+    socket.on('jumpAllTo', function (index) {
+      console.log('jumpAllTo:' + index);
+      io.sockets.emit('jumpto', index);
+    });
 
-socket.emit('new user', {
-		username: data.name
-	});
-//end evan
+    socket.on('adduser', function (data) {
+
+      socket.emit('new user', {
+		    username: data.name
+      });
 
       io.sockets.emit('addphone', data);
-      socket.name = data.name
+        socket.name = data.name
     });
+
 
     socket.on('removeuser', function (data) {
      

@@ -1,17 +1,29 @@
 /* 
  * TODO:
- * - disable all sections except current OR disable page scroll
- * - jumpto function from websockets to jump to next page
- * - 
+ * - whenever page scrolls, send message to clients to also scroll
+ * - send messages to server to enable/disable MaxMSP audio system
  */
 
 (function(){
+
+	var lastSlide = 12; // ?
+	var currentSlide = 1; // start at registration
+
+
 	// initialize fullpage scrolling plugin
 	$(document).ready(function() {
 		$('#fullpage').fullpage({
-			sectionsColor: ['#000', '#200', '#002']
+			sectionsColor: ['#000', '#200', '#000', '#002', '#000', '#022', '#000','#202'],
+			afterLoad: function(anchorLink, index) {
+				// TODO: check for last slide reached
+
+				//scroll all clients to next...  
+				
+				currentSlide++;
+				console.log('jumpAllTo ' + index);
+				socket.emit('jumpAllTo', index);
+			}
 		});
-		$.fn.fullpage.setAllowScrolling(false);
 	});
 
 
@@ -22,7 +34,7 @@
 	var socket = io.connect('http://localhost:8080');
 
 	var thisUser = {
-		name: "phone" + Math.floor(Math.random()*10000000000)
+		name: "conductor" + Math.floor(Math.random()*10000000000)
 	}
 
 	// on connection to server
@@ -46,13 +58,6 @@
 
 		// Whenever the server emits 'new message', update the chat body
 		socket.on('new user', function (data) {
-		    console.log(data);
-		});
-
-		socket.on('jumpto', function (index) {
-			// jump to section data using fullpage...
-			$.fn.fullpage.moveTo( index );
-
 		    console.log(data);
 		});
 	});
