@@ -35,6 +35,7 @@ function startVoting()
       io.sockets.emit('voteData', { 'voteTally': voteTally,
                                 'votes' : votes,
                                 'average': averageVote }); // send vote data to all clients
+    client.send('/voteavg', averageVote);
     }, 
     voteIntervalTime);
 
@@ -65,16 +66,13 @@ function receiveVote(vote)
   if (voting)
   {
     // sanity check on vote
-    var voteVal = (vote == undefined) ? 0 : parseInt(vote,10);
+    var voteVal = (!vote || vote == undefined || isNaN(vote) ) ? 0 : parseInt(vote,10);
     
-    if (!isNaN(voteNum))
-    {
-      voteTally += vote;
-      votes++; 
-      averageVote = voteTally / votes; // votes should never be 0 because of above line
+    voteTally += vote;
+    votes++; 
+    averageVote = voteTally / votes; // votes should never be 0 because of above line
 
-      // could send average vote here but might be too much traffic!
-    }
+    // could send average vote here but might be too much traffic!
   }
 }
 
@@ -126,11 +124,6 @@ io.sockets.on('connection', function (socket)
 {
     // from evan
     console.log( getIPAddresses() );
-
-
-    //
-    // make sure client pages are always updated!!
-    //
 
     socket.on('nx', function (data) {
       client.send(data.oscName, data.value);

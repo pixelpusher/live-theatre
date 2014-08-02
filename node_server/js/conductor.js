@@ -7,7 +7,7 @@
 (function(){
 
 	var currentSlide = 1; // start at registration
-	
+	var voteSlider = null;
 	var thisUser = {
 		name: "conductor" + Math.floor(Math.random()*10000000000)
 	}
@@ -32,19 +32,22 @@
 		    console.log(data);
 		});
 
-		// for slide 3 - voting system
-		socket.on('voteData', receiveVote);
+		socket.on('voteData', function (voteData) {
+			// do some sanity checks on vote data
+			//
+			var ave = voteData.average;
+			var val = (!ave || isNaN(ave)) ? 0 : ave;
+
+			val = Math.max(ave,-1);
+			val = Math.min(ave,1);
+			val = (val + 1) * 0.5;
+			//console.log(val);
+			if (voteSlider) voteSlider.setValue(val);
+			//slider1.set({ value: val });
+		});
+
 
 	});
-
-
-	function receiveVote(voteData)
-	{
-		// votes -> number votes
-		// voteTally -> sum of all votes
-		// averageVote -> votes/voteTally
-		console.log( voteData );
-	}
 
 	var pageTransitions = [
 		{ transition: {from:1, to:2}, func: function() {} },
@@ -105,6 +108,7 @@
 				// could this have been done in an array, with sub-arrays? yes.
 				// would it have been better that way? maybe.
 
+		voteSlider = new Dragdealer('vote-slider');
 
 		$('#fullpage').fullpage({
 			sectionsColor: ['#000', '#200', '#000', '#002', '#000', '#022', '#000','#202'],

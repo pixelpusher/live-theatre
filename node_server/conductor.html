@@ -7,6 +7,15 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery.fullPage.css" />
 	<link rel="stylesheet" type="text/css" href="css/darkadmin.bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="css/darkadmin.local.css" />
+    <link rel="stylesheet" type="text/css" href="css/dragdealer.css" />
+
+	<style type="text/css">
+
+    	#section3 .row
+    	{
+    		height:33%;
+    	}
+    </style>
 
 </head>
 <body>
@@ -32,27 +41,19 @@
 
 	<div class="section" id="section3">
 	<!-- audience audio participation -->
-		<div class="row">
-			<div class="col-sm-8 center-block">
-				<canvas nx="slider" label="audience" style="width:100%;height:48px">Slider</canvas>
-			</div>
-		</div>
+		<div class="row"></div>
 
 		<div class="row">
-			<div class="col-sm-1">
+			<div class="col-md-1">
 			</div>	
-			<div class="col-sm-3">
-			    <canvas nx="button" style="width:100%"></canvas>
+			<div class="col-md-10 dragdealer" id="vote-slider" >
+				<div class="handle red-bar">results</div>
 			</div>
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-3">
-				<canvas nx="button" style="width:100%"></canvas>
-			</div>
-			<div class="col-sm-1">
+			<div class="col-md-1">
 			</div>
 		</div>
 
+		<div class="row"></div>
 	</div>
 
 	
@@ -100,7 +101,7 @@
 	<!-- This following line needed in the case of using the plugin option `scrollOverflow:true` 
 	<script type="text/javascript" src="js/vendors/jquery.slimscroll.min.js"></script> -->
 	<script type="text/javascript" src="js/jquery.fullPage.min.js"></script>
-
+	<script type="text/javascript" src="js/dragdealer.min.js"></script>
 	<script type="text/javascript" src="js/conductor.js"></script>
 
 </body>

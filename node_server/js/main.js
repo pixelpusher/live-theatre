@@ -19,15 +19,24 @@ var thisUser = {
 (function() {
 
 	var currentPage = 1; // first section
+	var voteSlider = null;
+
+	function preventEvent ( event ){
+		console.log('prevented');
+	event.preventDefault();
+	}
+
 
 	// initialize fullpage scrolling plugin
 	$(document).ready(function() {
+		voteSlider = new Dragdealer('vote-slider');
+
 		$('#fullpage').fullpage({
 			sectionsColor: ['#000', '#200', '#000', '#002', '#000', '#022', '#000','#202'],
 		});
 		// turn of scrolling - this is done by the 'conductor' only
 		$.fn.fullpage.setAllowScrolling(false);
-		$.fn.fullpage.setKeyboardScrolling(false);
+		$.fn.fullpage.setKeyboardScrolling(false); 
 	});
 
 
@@ -46,8 +55,10 @@ var thisUser = {
 		socket.emit('vote', -1);
 	}
 
-	$('#vote-left').click( voteUp );
-	$('#vote-right').click( voteDown );
+	// TODO - CSS animation add/remove
+
+	$('#vote-left').click( voteDown );
+	$('#vote-right').click( voteUp );
 
 	//
 	// websockets
@@ -69,12 +80,13 @@ var thisUser = {
 			})
 			thisUser.gui[i].oscName = thisUser.gui[i].oscName.replace("/","")
 		}
+
 		//console.log(thisUser)
 		socket.emit('adduser', thisUser);
 
 		// Whenever the server emits 'new message', update the chat body
 		socket.on('new user', function (data) {
-		    console.log(data);
+		   // console.log(data);
 		});
 
 		socket.on('jumpto', function (index) {
@@ -90,6 +102,22 @@ var thisUser = {
 		socket.on('scrollingState', function (state) {
 			$.fn.fullpage.setAllowScrolling(state);
 		});
+
+		socket.on('voteData', function (voteData) {
+			// do some sanity checks on vote data
+			//
+			var ave = voteData.average;
+			var val = (!ave || isNaN(ave)) ? 0 : ave;
+
+			val = Math.max(ave,-1);
+			val = Math.min(ave,1);
+			val = (val + 1) * 0.5;
+			//console.log(val);
+			voteSlider.setValue(val);
+			//slider1.set({ value: val });
+		});
+
+
 
 	});
 
