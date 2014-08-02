@@ -15,6 +15,77 @@ var connect = require('connect'),
     client = new osc.Client('localhost', 4040);
     console.log("http server on 8080, osc client on 4040");
 
+
+
+//
+// for slide 4 - voting system
+//
+var voteTally = 0;  // start neutral
+var votes = 0;  // number of total votes counted
+var voting = false; // if we are actively receiving votes
+var averageVote = 0;  // average of votes = voteTally/votes
+var voteIntervalFunc = null;
+var voteIntervalTime = 500; // ms between vote broadcasts to server
+
+function startVoting()
+{
+  voteTally = votes = averageVote = 0;
+  voting = true;
+  voteIntervalFunc = setInterval( function() { 
+      io.sockets.emit('voteData', { 'voteTally': voteTally,
+                                'votes' : votes,
+                                'average': averageVote }); // send vote data to all clients
+    }, 
+    voteIntervalTime);
+
+  console.log('start voting:' + voteIntervalFunc);
+}
+
+function stopVoting()
+{
+  console.log('stop voting');
+  voting = false;
+
+  if (voteIntervalFunc)
+  {
+    console.log('clearing vote interval');
+    clearInterval(voteIntervalFunc);
+  }
+
+  voteIntervalFunc = null;
+}
+
+/*
+ * receive a vote (1 or -1) from the A/B voting page
+ */
+
+function receiveVote(vote)
+{
+  console.log('vote: ' + vote);
+  if (voting)
+  {
+    // sanity check on vote
+    var voteVal = (vote == undefined) ? 0 : parseInt(vote,10);
+    
+    if (!isNaN(voteNum))
+    {
+      voteTally += vote;
+      votes++; 
+      averageVote = voteTally / votes; // votes should never be 0 because of above line
+
+      // could send average vote here but might be too much traffic!
+    }
+  }
+}
+
+
+// true / false to turn on/off client page scrolling
+function setPageScrollingState(state)
+{
+  io.sockets.emit('scrollingState', state);
+}
+
+
 //console.log(__dirname);
 
 function getIPAddresses() {
@@ -41,10 +112,25 @@ io.sockets.on('error', function (data) {
 	}
 );
 
+
+// make sure pages are always on current index
+
+var currentPage = 1; // start at beginning
+
+var indexFunc = setInterval( function() {
+  io.sockets.emit('jumpto', currentPage);
+}, 1000);
+
+
 io.sockets.on('connection', function (socket) 
 {
     // from evan
     console.log( getIPAddresses() );
+
+
+    //
+    // make sure client pages are always updated!!
+    //
 
     socket.on('nx', function (data) {
       client.send(data.oscName, data.value);
@@ -58,8 +144,27 @@ io.sockets.on('connection', function (socket)
     // when jumpAllTo msg received from conductor, move all clients to the scroll index
     socket.on('jumpAllTo', function (index) {
       console.log('jumpAllTo:' + index);
+      
+      currentPage = index;
+
       io.sockets.emit('jumpto', index);
     });
+
+    // for slide 3 - voting system
+    socket.on('vote', receiveVote);
+
+    // for slide 3 - voting system
+    socket.on('votingState', function (data) {
+      if (data == 1)
+      {
+        startVoting();
+      }
+      else
+      {
+        stopVoting();
+      }
+    });
+
 
     socket.on('adduser', function (data) {
 
@@ -75,12 +180,6 @@ io.sockets.on('connection', function (socket)
     socket.on('removeuser', function (data) {
      
     });
-
-    socket.on('tiltuser', function (data) {
-      //console.log(data)
-      io.sockets.emit('tiltvis', data);
-    });
-
 
     socket.on('disconnect', function() {
       io.sockets.emit('removephone', {name: socket.name});

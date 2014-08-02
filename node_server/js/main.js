@@ -16,7 +16,10 @@ var thisUser = {
 
 
 
-(function(){
+(function() {
+
+	var currentPage = 1; // first section
+
 	// initialize fullpage scrolling plugin
 	$(document).ready(function() {
 		$('#fullpage').fullpage({
@@ -27,6 +30,28 @@ var thisUser = {
 		$.fn.fullpage.setKeyboardScrolling(false);
 	});
 
+
+	//
+	// voting buttons for slide 3
+	//
+	function voteUp()
+	{
+		//console.log(thisUser)
+		socket.emit('vote', 1);
+	}
+
+	function voteDown()
+	{
+		//console.log(thisUser)
+		socket.emit('vote', -1);
+	}
+
+	$('#vote-left').click( voteUp );
+	$('#vote-right').click( voteDown );
+
+	//
+	// websockets
+	//
 
 	// on connection to server
 	socket.on('connect', function() {
@@ -54,10 +79,18 @@ var thisUser = {
 
 		socket.on('jumpto', function (index) {
 			// jump to section data using fullpage...
-			$.fn.fullpage.moveTo( index );
-
-		    console.log(index);
+			if (currentPage != index)
+			{				
+				$.fn.fullpage.moveTo( index );
+				currentPage = index;
+				console.log('jumped to ' + index);
+			}
 		});
+
+		socket.on('scrollingState', function (state) {
+			$.fn.fullpage.setAllowScrolling(state);
+		});
+
 	});
 
 
