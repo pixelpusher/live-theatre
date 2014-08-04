@@ -77,6 +77,15 @@ function receiveVote(vote)
 }
 
 
+//
+// for slide 6 - image chooser
+//
+
+// TODO
+//
+
+
+
 // true / false to turn on/off client page scrolling
 function setPageScrollingState(state)
 {
@@ -158,6 +167,12 @@ io.sockets.on('connection', function (socket)
       }
     });
 
+    socket.on('images', function (data) {  
+      //expects array...
+
+      console.log('received images: ' + data);
+
+    });
 
     socket.on('adduser', function (data) {
 

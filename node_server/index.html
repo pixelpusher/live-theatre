@@ -15,13 +15,112 @@
     	{
     		height:20%;
     	}
+
+    	.draggable {
+			padding:0;
+			width:100%;
+		}
+
+    	.draggable img {
+    		display: block;
+    		margin: 0 auto;
+    		height:100%;
+    		width:100%;
+			border: 1px solid yellow;
+    	}
+		div[class^="choice-"], div[class*=" choice-"]
+		{
+			/* nothing */
+			/*margin:12.5%;*/
+		}
+
+		.replaceme
+		{
+			border: 1px dotted lightgray;
+			/* TODO: fix. Ugh */
+    		width:100%;
+			margin: 0 auto;
+			overflow: hidden;
+		}
+
+		div[class^="targetx-"], div[class*=" targetx-"]
+		{
+			/*
+			border: 1px dotted lightgray;
+			*/
+			position:relative;
+		}
+
+		div[class^="targetx-"] img, div[class*=" targetx-"] img
+		{
+			border: none;
+		}
+		#section5 .row
+		{
+			min-height:8.33%;
+		}
+
+		#section5 .btn
+		{
+			display: block;
+			margin: 0 auto;
+			width: 75%;
+		}
+/*
+		div[class^="target-"] p, div[class*=" target-"] p
+		{
+			margin:12.5%;
+			padding: 12.5%;
+			border: 1px dotted lightgray;
+			font-size: 2em;
+			font-weight: bold;
+			text-align: center;
+		}
+*/
+
+		.target-caption {
+			position:absolute;
+			margin:0;
+			padding:0;
+			bottom:-1px; /* account for 1px border on img */
+			width:100%;
+			background-color:black;
+			z-index:2;
+			opacity:0.6;
+			filter:alpha(opacity=60);
+			border: none;
+		}
+
+		.target-caption p
+		{
+			display: block;
+			font-size:2em;
+			font-weight:bold;
+			text-align:center;
+			color:white;
+			margin: 0 auto;
+			padding: 0 0.5em;
+		}
+
+		.target-dropped img
+		{
+			display: block;
+			position: relative;
+			margin:0 auto;
+			padding: 0;
+			border: 1px dotted lightgray;
+			height:100%;
+    		width:100%;
+
+		}
+
     </style>
 
 </head>
 <body>
 <div id="fullpage">
 	
-	<div class="section active" id="section1">
+	<div class="section active container"  id="section1">
 	<!-- audience registration -->
 	<!-- TODO: VISUAL REPRESENTATION OF THE AUDIENCE REGISTERING -->
 
@@ -39,32 +138,32 @@
 	</div>
 
 
-	<div class="section" id="section3">
+	<div class="section container" id="section3">
 	<!-- audience audio participation -->
 		<div class="row"></div>
 
 		<div class="row">
-			<div class="col-md-1">
+			<div class="col-sm-1">
 			</div>	
-			<div class="col-md-10 dragdealer" id="vote-slider" >
+			<div class="col-sm-10 dragdealer" id="vote-slider" >
 				<div class="handle red-bar">results</div>
 			</div>
-			<div class="col-md-1">
+			<div class="col-sm-1">
 			</div>
 		</div>
 
 		<div class="row"></div>
 
 		<div class="row">
-			<div class="col-md-1">
+			<div class="col-sm-1">
 			</div>	
-			<div class="col-md-10">
+			<div class="col-sm-10">
 				<div class="btn-group btn-group-justified">
 					<a href="#" id="vote-left" class="btn btn-primary btn-lg">Left</a>
                 	<a href="#" id="vote-right" class="btn btn-primary btn-lg">Right</a>
 				</div>				
 			</div>
-			<div class="col-md-1">
+			<div class="col-sm-1">
 			</div>
 		</div>
 
@@ -79,11 +178,67 @@
 	</div>
 
 
-	<div class="section" id="section5">
+
+	<div class="section container" id="section5">
 		<!-- image sequence voting tool -->
-			
-		<canvas nx="slider"></canvas>
+	
+		<div class="row">
+			<div class="col-sm-8">
+			</div>
+			<div class="col-sm-4">	
+				<button id="finish-button" class="btn btn-success">finish</button>
+			</div>
+		</div>
+
+		<!-- draggable row -->		
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="choice-0 draggable">
+					<img src="http://placekitten.com/g/200/200" />
+				</div>
+			</div>	
+			<div class="col-sm-4">
+				<div class="choice-1 draggable">
+					<img src="http://placekitten.com/g/200/200" />
+				</div>
+			</div>	
+
+			<div class="col-sm-4">
+				<div class="choice-2 draggable">
+					<img src="http://placekitten.com/g/200/200" />
+				</div>
+			</div>	
+		</div>
+	
+		<div class="row"></div>
+
+		<!-- droppable row -->
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="targetx-0">
+					<div class="replaceme"><img src="img/gray-square.jpg" style="opacity:0.3" width="100%"/></div>
+					<div class="target-caption"><p>1</p></div>
+				</div>
+			</div>	
+			<div class="col-sm-4">
+				<div class="targetx-1">
+					<div class="replaceme"><img src="img/gray-square.jpg" style="opacity:0.3"  width="100%"/></div>
+					<div class="target-caption"><p>2</p></div>
+				</div>
+			</div>	
+
+			<div class="col-sm-4">
+				<div class="targetx-2">
+					<div class="replaceme"><img src="img/gray-square.jpg" style="opacity:0.3" width="100%"/></div>
+					<div class="target-caption"><p>3</p></div>
+				</div>
+			</div>	
+		</div>
+
+
+	<!-- end section 5 -->
 	</div>
+
 
 
 	<div class="section" id="section6">
@@ -103,14 +258,14 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 	<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
-	<!-- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script> -->
-	<script src="js/jquery-ui-1.8.10.custom.min.js"></script>
+	<!-- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script> -->
+	
+	<!-- from fullpagejs - not needed? -->
+	<!--<script src="js/jquery-ui-1.8.10.custom.min.js"></script>-->
 
+	<script src="js/jquery-ui-1.11.0.min.js"></script>
 	<script type="text/javascript" src="lib/nexusUI.js"></script>
 
-	<!-- This following line is needed in case of using the default easing option or when using another
-	one rather than "linear" or "swing". You can also add the full jQuery UI instead of this file if you prefer 
-	<script src="js/vendors/jquery.easings.min.js"></script> -->
 	<!-- This following line needed in the case of using the plugin option `scrollOverflow:true` 
 	<script type="text/javascript" src="js/vendors/jquery.slimscroll.min.js"></script> -->
 	<script type="text/javascript" src="js/jquery.fullPage.min.js"></script>

@@ -20,6 +20,8 @@ var thisUser = {
 
 	var currentPage = 1; // first section
 	var voteSlider = null;
+	var chosenImages = [-1,-1,-1];
+
 
 	function preventEvent ( event ){
 		console.log('prevented');
@@ -37,6 +39,84 @@ var thisUser = {
 		// turn of scrolling - this is done by the 'conductor' only
 		$.fn.fullpage.setAllowScrolling(false);
 		$.fn.fullpage.setKeyboardScrolling(false); 
+
+		//
+		// image dragging/voting section
+		//
+
+		$( ".draggable" ).draggable({
+	      revert: "invalid", // when not dropped, the item will revert back to its initial position
+	      containment: "document",
+	      //helper: "clone",
+	      cursor: "move"
+		});
+	    
+	    var i=3;
+
+	    while (i--)
+	    {
+	    	$( ".targetx-"+i ).data('targetIndex', i);
+
+		    $( ".targetx-"+i ).droppable({
+		      //accept: ".choice-"+i,
+		      accept: ".draggable",
+		      activeClass: "target-active",
+		      hoverClass: "target-hover",
+		      drop: function( event, ui ) {
+		      	var me = $( this );
+
+
+		      	if ( me.hasClass("target-dropped") )
+		      	{
+		      		// TODO - something
+		      	}
+		      	else 
+		      	{
+		      		var src = ui.draggable.find('img').attr( "src" );
+		      		//console.log('src=' + src);
+
+			        me.addClass( "target-dropped" )
+			          .find( ".replaceme")
+			          	.replaceWith('<div class="replaceme"><img src='+src + ' /></div>')
+			          	.end();
+			          
+
+			        // check class to keep track...
+			        // TODO: find a better way...
+			        if (ui.draggable.hasClass('choice-0'))
+			        {
+			        	chosenImages[0] = me.data('targetIndex');
+			        }
+			        else if (ui.draggable.hasClass('choice-1'))
+			        {
+			        	chosenImages[1] = me.data('targetIndex');
+			        }
+			        else if (ui.draggable.hasClass('choice-2'))
+			        {
+			        	chosenImages[2] = me.data('targetIndex');
+			        }
+			        	
+
+			        ui.draggable.fadeOut(function() {
+			        	ui.draggable.remove();	
+			        });
+			  	}
+		      }
+		    });
+		}
+
+		// this should broadcast image results back to server...
+		$('#finish-button').click( function() {
+			socket.emit('images', chosenImages);
+
+			console.log( chosenImages);
+			
+			$('#finish-button').addClass('disabled')
+				.off()
+				.html('sent!');
+
+		});
+	
 	});
 
 
