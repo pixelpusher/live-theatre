@@ -19,6 +19,30 @@
     	.dragdealer, .dragdealer .red-bar {
     		height:200px;
     	}
+
+    	.img-caption {
+			position:absolute;
+			margin:0;
+			padding:0;
+			bottom:-1px; /* account for 1px border on img */
+			width:100%;
+			background-color:black;
+			z-index:2;
+			opacity:0.6;
+			filter:alpha(opacity=60);
+			border: none;
+		}
+
+		.img-caption p
+		{
+			display: block;
+			font-size:2em;
+			font-weight:bold;
+			text-align:center;
+			color:white;
+			margin: 0 auto;
+			padding: 0 0.5em;
+		}
     </style>
 
 </head>
@@ -67,10 +91,22 @@
 	</div>
 
 
-	<div class="section" id="section5">
+	<div class="section container" id="section5">
 		<!-- image sequence voting tool -->
-			
-		<canvas nx="slider"></canvas>
+		<div class="row" id="img-results">
+			<div class="col-md-4" id="img0">
+				<img src="http://placekitten.com/g/200/200" />
+				<div class="img-caption"><p>1</p></div>
+			</div>	
+			<div class="col-md-4" id="img1">
+				<img src="http://placekitten.com/g/200/200" />
+				<div class="img-caption"><p>2</p></div>
+			</div>
+			<div class="col-md-4" id="img2">
+				<img src="http://placekitten.com/g/200/200" />
+				<div class="img-caption"><p>3</p></div>
+			</div>
+		</div>
 	</div>
 
 

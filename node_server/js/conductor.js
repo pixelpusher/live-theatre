@@ -46,7 +46,29 @@
 			//slider1.set({ value: val });
 		});
 
+		socket.on('imgVoteData', function (voteData) {
+			// TODO!!
+			// update display
+			//
+			//console.log( 'image voteTally: ' + voteData.voteTally );
+			//console.log( 'image votes: ' + voteData.votes );
 
+			var topVotes = voteData.voteTally[2];
+			console.log('top votes ' + topVotes);
+
+			var listview = $('#img-results'),
+		    	listitems = listview.children('div');
+
+			var imglist = listitems.detach();
+
+			$("li:last").slideUp(function() {
+			  $(this).insertBefore("li:first").slideDown();
+			})​;​
+			// or
+			$('#new_div').appendTo('#original_div').show('slow');
+			
+			listview.append(listitems);
+		});
 	});
 
 	var pageTransitions = [
