@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="../node_server/js/jquery-1.11.1.min.js"></script>
+
+<meta charset=utf-8 />
+
+    <title>Detach Test</title>
+<style>
+    body {
+        font-family: sans-serif;
+    }
+    #container div {
+        float: left;
+        width: 22.95%;
+        border: 1px solid black;
+        margin: -1px;
+        padding: 1%;
+    }
+    
+    #a { background-color:green; opacity:0.8;};
+    #b { background-color:pink; opacity:0.8;};
+    #c { background-color:orange; opacity:0.8;};
+    #d { background-color:lightblue; opacity:0.8;};
+    
+</style>
+    
+</head>
+<body>
+    
+    <div>This shows how to animate removing all children of a div,
+    then adding them back in, in a particular order. It works for less than 10
+    different divs.</div>
+    
+    <ol id="results">
+        <li>
+            <div class="item">d1</div>
+            
+            <div class="item">d2</div>
+            
+            <div class="item">d3</div>
+            
+            <div class="item">d4</div>
+        </li>
+        <li>
+            <div class="item">d1</div>
+            
+            <div class="item">d2</div>
+            
+            <div class="item">d3</div>
+            
+            <div class="item">d4</div>
+        </li>
+        <li>
+            <div class="item">d1</div>
+            
+            <div class="item">d2</div>
+            
+            <div class="item">d3</div>
+            
+            <div class="item">d4</div>
+        </li>
+    </ol>
+    
+<script>
+    
+    var order = ['0123', '1230', '2301', '3012']; // the order as a string
+    //console.log(order[1]);
+    
+    $(function() 
+    {
+        var container = $("#container");
+        
+        // set reorder to happen in 2 seconds
+        setTimeout(reorder, 2000);
+        
+        function reorder()
+        {
+            //var items = container.children('.item');
+            var listItems = $('#results li');
+            
+            listItems.each( function(row, listItem) {
+                //console.log(row + ': ' + listItem);
+                
+                var currentOrder = order[row];
+                
+                var items = $(listItem).children('.item');
+                var lastIndex = items.length-1;
+                
+                items.each(function(index, item) {
+                    var $item = $(item);
+                    var currentIndex = currentOrder[index];
+                    
+                    if (index == lastIndex)
+                    {
+                        // for the last item, when it's done hiding, remove all items
+                        // from current list item and re-add them in the correct order
+                        $item.hide('slow', function() {
+                            
+                            items.each(function(index, item) {
+                                $(this).detach();
+                            });
+                                
+                            // order should be asme as number of items...
+                            var i = 0;
+                            
+                            while(i < currentOrder.length)
+                            {
+                                //console.log('i:' + i + ' ' + currentOrder[i]);
+                                var current = currentOrder[i];
+                                
+                                $(items[current]).appendTo(listItem).show('slow');
+                                
+                                i++;
+                            }
+                        });
+                    }
+                    else
+                    {
+                        $item.hide('slow');
+                    }                    
+                // end each item
+                });
+            // end each list item (row)
+            });
+            
+        // end reorder()
+        }
+    });
+    
+</script>
+</body>
+</html>

@@ -173,7 +173,8 @@ while(imgVoteTally.length < TOTAL_STATES) {
 var imgVotes = 0;  // number of total votes counted - probably not needed
 var imgVoting = false; // if we are actively receiving votes
 var imgVoteIntervalFunc = null;
-var imgVoteIntervalTime = 500; // ms between vote broadcasts to server
+var imgVoteIntervalTime = 1000; // ms between vote broadcasts to server
+var imgVotesDirty = false; // needs update?
 
 
 // for passing to array.sort() for votes func in ascending order accoring to # votes received
@@ -193,31 +194,39 @@ function startImgVoting()
       i++;
   }
 
-  imgVoting = true;
+  imgVoting = imgVotesDirty = true;
   
   if (imgVoteIntervalFunc != null) clearInterval(imgVoteIntervalFunc);
 
   imgVoteIntervalFunc = setInterval( function() { 
       // sort votes...
 
-      // reset votes array
-      var n=imgVoteTally.length;
-
-      while(n--)
+      // only send if necessary
+      if (imgVotesDirty)
       {
-          imgVoteTallySorted[n][0] = imgVoteTally[n][0];
-          imgVoteTallySorted[n][1] = imgVoteTally[n][1];
+
+        imgVotesDirty = false;
+
+        // reset votes array
+        var n=imgVoteTally.length;
+
+        while(n--)
+        {
+            imgVoteTallySorted[n][0] = imgVoteTally[n][0];
+            imgVoteTallySorted[n][1] = imgVoteTally[n][1];
+            imgVoteTallySorted[n][2] = imgStates[n];
+        }
+        imgVoteTallySorted.sort(imgVotesSortFunc); // sort according to votes
+
+        // testing
+        //console.log('vote tally: ');
+        //console.log(imgVoteTallySorted);
+
+        io.sockets.emit('imgVoteData', { 'voteTally': imgVoteTallySorted, 'votes' : imgVotes }); // send vote data to all clients
+
+        // send top vote state to Max via OSC
+        client.send('/topvote', imgVoteTallySorted[0][0]);
       }
-      imgVoteTallySorted.sort(imgVotesSortFunc); // sort according to votes
-
-      // testing
-      //console.log('vote tally: ');
-      //console.log(imgVoteTallySorted);
-
-      io.sockets.emit('imgVoteData', { 'voteTally': imgVoteTallySorted, 'votes' : imgVotes }); // send vote data to all clients
-
-      // send top vote state to Max via OSC
-      client.send('/topvote', imgVoteTallySorted[0][0]);
     }, 
     imgVoteIntervalTime);
 
@@ -249,6 +258,7 @@ function receiveImgVote(vote)
 
   if (imgVoting)
   {
+    imgVotesDirty = true; // need to send update to clients
     var stateIndex = parseInt(lookupImgState(vote, imgStates),10);
     // test
     console.log('vote state:' + stateIndex );

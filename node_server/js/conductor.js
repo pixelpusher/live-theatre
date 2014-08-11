@@ -11,7 +11,9 @@
 	var thisUser = {
 		name: "conductor" + Math.floor(Math.random()*10000000000)
 	}
-	
+	var imageVoteRowItems = null;
+	var imageVoteRows = null;
+
 	//change LOCALHOST to your IP to enable connecting from other devices
 
 	//var socket = io.connect('http://192.168.0.7:8080');
@@ -46,29 +48,87 @@
 			//slider1.set({ value: val });
 		});
 
+		var busy = false;
+
 		socket.on('imgVoteData', function (voteData) {
-			// TODO!!
-			// update display
+			// 
+			// expects voteData.voteTally to contain array of arrays of orderings for each row as follows:
+			// [index, number of votes, state order String]
+			// ex:
+			// [ [0,20,'0123'], [4,15,'1230'], [3,10,'2301'] ]
 			//
 			//console.log( 'image voteTally: ' + voteData.voteTally );
 			//console.log( 'image votes: ' + voteData.votes );
 
-			var topVotes = voteData.voteTally[2];
-			console.log('top votes ' + topVotes);
+			if ((imageVoteRowItems == null) || busy) return;
 
-			var listview = $('#img-results'),
-		    	listitems = listview.children('div');
+			busy = true;
+			//console.log('----------REORDERING------------------');
+			var topVotes = voteData.voteTally;
 
-			var imglist = listitems.detach();
+			//console.log('top votes ' + topVotes);
+			//imageVoteRows = $('#img-results li .row');
 
-			$("li:last").slideUp(function() {
-			  $(this).insertBefore("li:first").slideDown();
-			})​;​
-			// or
-			$('#new_div').appendTo('#original_div').show('slow');
+            imageVoteRows.each( function(row, listItem) {
+                //console.log(row + ': ' + listItem);
+                
+	            var currentOrder = topVotes[row][2];
+	            //console.log('currentOrder: ' + currentOrder);
+	            
+	            //var items = $(listItem).children('.item');
+	            var items = imageVoteRowItems[row];
+
+	            var itemsIndex = items.length;
+	            //console.log('items:' + itemsIndex);
+
+	            while(itemsIndex--)
+	            {
+	                var $item = $(items[itemsIndex]);
+	                //console.log('index:' + itemsIndex);
+	                //console.log($item);
+
+	                if (itemsIndex == 0)
+	                {
+	                	//console.log('last index:' + itemsIndex);
+	                    // for the last item, when it's done hiding, remove all items
+	                    // from current list item and re-add them in the correct order
+	                    $item.hide('fast', function() {
+	                        
+	                       $item.detach();
+
+	                        // order should be asme as number of items...
+	                        var i = 0;	
+	                        
+	                        while(i < currentOrder.length)
+	                        {
+	                            //console.log('i:' + i + ' ' + currentOrder[i]);
+	                            var current = currentOrder[i];
+	                            //console.log($(items[current]));
+	                            //console.log('current item:' + $(items[current]));
+	                            $(items[current]).appendTo(listItem).show('fast');
+	                            
+	                            i++;
+	                        }
+
+	                        // TODO - fix this
+	                        busy = false; // not exactly true.
+
+	                        //console.log('----------DONE REORDERING------------------');
+	                    });
+	                }
+	                else
+	                {
+	                   $item.hide('fast', function() { $(this).detach(); });
+	                }                    
+	            // end each item
+	            }
+	        // end each list item (row)
+	        });
 			
-			listview.append(listitems);
-		});
+		 // end on 'imgVoteData' socket msg
+	     });            
+        
+    // end socket functions
 	});
 
 	var pageTransitions = [
@@ -129,6 +189,22 @@
 				// list of possible page transitions (from page index, to page new index)
 				// could this have been done in an array, with sub-arrays? yes.
 				// would it have been better that way? maybe.
+
+		imageVoteRows = $('#img-results li .row');
+	    imageVoteRowItems = [];
+
+		// build a map of all images in the voting results rows
+		// this will not change, but the order will once the results are in!
+		imageVoteRows.each( function(row, listItem) {
+			//console.log('adding image vote row: ' + row);
+			imageVoteRowItems[row] = [];
+
+		    var items = $(listItem).children('.item');
+		    items.each(function(index, elem) {
+		    	//console.log('adding child:' + index);
+		    	imageVoteRowItems[row][index] = elem;
+		    });
+		});
 
 		voteSlider = new Dragdealer('vote-slider');
 
