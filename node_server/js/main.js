@@ -7,9 +7,9 @@
 
 //change LOCALHOST to your IP to enable connecting from other devices
 
-//var socket = io.connect('http://192.168.0.7:8080');
-
 var socket = io.connect('http://localhost:8080');
+
+//var socket = io.connect('http://192.168.1.68:80');
 var thisUser = {
 	name: "phone" + Math.floor(Math.random()*10000000000)
 };
@@ -110,7 +110,7 @@ var thisUser = {
 			socket.emit('images', chosenImages);
 
 			console.log( chosenImages);
-			
+
 			$('#finish-button').addClass('disabled')
 				.off()
 				.html('sent!');
@@ -146,7 +146,7 @@ var thisUser = {
 
 	// on connection to server
 	socket.on('connect', function() {
-		
+		/*
 		thisUser.gui = new Array()
 
 		for (var i=0;i<nx.nxObjects.length;i++) {
@@ -160,7 +160,7 @@ var thisUser = {
 			})
 			thisUser.gui[i].oscName = thisUser.gui[i].oscName.replace("/","")
 		}
-
+*/
 		//console.log(thisUser)
 		socket.emit('adduser', thisUser);
 
