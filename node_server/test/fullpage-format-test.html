@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="./js/jquery-1.11.1.min.js"></script>
-<script src="./js/jquery-ui-1.11.0.min.js"></script>
-<script src="./js/jquery.ui.touch-punch.min.js"></script>
-<script src="./js/vendors/jquery.slimscroll.min.js"></script>
+<script src="../js/jquery-1.11.1.min.js"></script>
+<script src="../js/jquery-ui-1.11.0.min.js"></script>
+<script src="../js/jquery.ui.touch-punch.min.js"></script>
+<script src="../js/vendors/jquery.slimscroll.min.js"></script>
+<script src="../js/jquery.fullPage.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="css/darkadmin.bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/darkadmin.local.css" />
+<link rel="stylesheet" type="text/css" href="../css/jquery.fullPage.css" />
+<link rel="stylesheet" type="text/css" href="../css/darkadmin.bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/darkadmin.local.css" />
 
 <meta charset=utf-8 />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,37 +46,62 @@
 
 
     <div class="section" id="section2">
-    <!-- audience audio participation -->
-        <div class="row"></div>
+        <div class="container">
+        <!-- audience audio participation -->
+            <div class="row">ro1</div>
 
-        <div class="row">
-            <div class="col-md-1">
-            </div>  
-            <div class="col-md-10 dragdealer" id="vote-slider" >
-                <div class="handle red-bar">results</div>
+            <div class="row">
+                <div class="col-md-1">one
+                </div>  
+
+                <div class="col-md-10">
+                    <div>results</div>
+                </div>
+
+                <div class="col-md-1">two
+                </div>
             </div>
-            <div class="col-md-1">
-            </div>
+
+            <div class="row">row3</div>
         </div>
-
-        <div class="row"></div>
     </div>
+
 </div>
 
 
 <script>
+
+
+(function(){
+
+var resizeId = null;
+
 $(function() 
 {
         
         $('#fullpage').fullpage({
-            sectionsColor: ['#000', '#202' ],
+            sectionsColor: ['#202', '#808' ],
             afterLoad: function(anchorLink, index) 
             {
-            
+                console.log('loaded');
+            },
+            afterResize: function() 
+            {
+                var windowsHeight = $(window).height();
+                /*
+                if (resizeId)
+                {
+                    clearTimeout(resizeId);
+                }
+                resizeId = setTimeout($.fn.fullpage.reBuild, 500);
+                */
+                console.log('resized: ' + (windowsHeight/3));
+                $('#section2 .row').css('height', (windowsHeight/3) + 'px');
             }
         });
 });
 
+}());
 </script>
 </body>
 </html>
