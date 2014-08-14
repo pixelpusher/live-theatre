@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="./js/jquery-1.11.1.min.js"></script>
+<script src="./js/jquery-ui-1.11.0.min.js"></script>
+<script src="./js/jquery.ui.touch-punch.min.js"></script>
+<script src="./js/vendors/jquery.slimscroll.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/darkadmin.bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/darkadmin.local.css" />
+
+<meta charset=utf-8 />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<title>Full page formatting Test</title>
+
+<style>
+    body {
+        font-family: sans-serif;
+    }
+
+    #section3 .row
+    {
+            height:33%;
+    }
+
+</style>
+    
+</head>
+<body>
+  
+<div id="fullpage">
+
+    <div class="section active" id="section1">
+    <!-- audience registration -->
+    <!-- TODO: VISUAL REPRESENTATION OF THE AUDIENCE REGISTERING -->
+
+        <div class="row">
+          <div class="col-sm-12">
+            <h1 id="buttons" class="page-header">Registration</h1>
+          </div>
+        </div>
+    </div>
+
+
+    <div class="section" id="section2">
+    <!-- audience audio participation -->
+        <div class="row"></div>
+
+        <div class="row">
+            <div class="col-md-1">
+            </div>  
+            <div class="col-md-10 dragdealer" id="vote-slider" >
+                <div class="handle red-bar">results</div>
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
+
+        <div class="row"></div>
+    </div>
+</div>
+
+
+<script>
+$(function() 
+{
+        
+        $('#fullpage').fullpage({
+            sectionsColor: ['#000', '#202' ],
+            afterLoad: function(anchorLink, index) 
+            {
+            
+            }
+        });
+});
+
+</script>
+</body>
+</html>
