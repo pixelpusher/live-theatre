@@ -137,8 +137,9 @@ function calcImgStates(a)
 }
 
 calcImgStates(imgStates); // populate array
-console.log('showing image states:');
-console.log(imgStates);
+//console.log('showing image states:');
+//console.log(imgStates);
+
 
 // return a number for this state (as a 3 digit string or array)
 function lookupImgState(state, lookupArray)
@@ -159,10 +160,12 @@ function lookupImgState(state, lookupArray)
 }
 
 // test
+/*
 console.log('testing image states 201 and 1,0,2 -- should be 1 and 3:')
 console.log( lookupImgState('201', imgStates) ); // should return 1
 console.log( lookupImgState([1,0,2], imgStates) ); // should return 5
 console.log('done testing image states lookup');
+*/
 
 // initialize array
 while(imgVoteTally.length < TOTAL_STATES) {
@@ -230,7 +233,7 @@ function startImgVoting()
     }, 
     imgVoteIntervalTime);
 
-  console.log('start image voting:' + imgVoteIntervalFunc);
+  ///console.log('start image voting:' + imgVoteIntervalFunc);
 }
 
 
@@ -241,7 +244,7 @@ function stopImgVoting()
 
   if (imgVoteIntervalFunc)
   {
-    console.log('clearing img vote interval');
+    //console.log('clearing img vote interval');
     clearInterval(imgVoteIntervalFunc);
   }
 
@@ -256,12 +259,20 @@ function receiveImgVote(vote)
 {
   console.log('img vote: ' + vote);
 
-  if (imgVoting)
+
+  // sanity check on vote
+  var voteVal = (vote == null || vote == undefined || isNaN(vote) );
+
+  console.log('voteVal: ' + voteVal);
+
+  if (imgVoting && voteVal && vote[0] > -1)
   {
     imgVotesDirty = true; // need to send update to clients
     var stateIndex = parseInt(lookupImgState(vote, imgStates),10);
+    
     // test
-    console.log('vote state:' + stateIndex );
+    //console.log('vote state:' + stateIndex );
+
     imgVoteTally[stateIndex][1] += 1;
     imgVotes++; 
   }
