@@ -167,7 +167,7 @@ function stopVoting()
 
 function receiveVote(vote)
 {
-  console.log('vote: ' + vote);
+  //console.log('vote: ' + vote);
   if (voting)
   {
     // sanity check on vote
@@ -176,7 +176,7 @@ function receiveVote(vote)
     votes++; 
 
     // use moving average...
-    if (voteTally > 9)
+    if (votes > 9)
     {
       averageVote -= averageVote / 10;
       averageVote += vote / 10;

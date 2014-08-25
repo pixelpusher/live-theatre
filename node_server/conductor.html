@@ -20,6 +20,13 @@
     		height:200px;
     	}
 
+        .vote-caption {
+            font-size: 24px;
+            color: white;
+            text-transform:capitalize;
+            letter-spacing: 0.35em;
+            padding: 8px;
+        }
     	.img-caption {
             display: none; /* maybe use this later on */
 			position:absolute;
@@ -123,13 +130,19 @@
 	<div class="section" id="section3">
 	<!-- audience audio participation -->
 		<div class="row"></div>
-
+        
 		<div class="row">
 			<div class="col-sm-1">
-			</div>	
-			<div class="col-sm-10 dragdealer" id="vote-slider" >
-				<div class="handle red-bar">tired limbs / furious flies</div>
 			</div>
+			<div class="col-sm-10">
+                <div class="row">
+                <p class="vote-caption pull-left">tired limbs</p>
+                <p class="vote-caption pull-right">furious flies</p>
+                </div>
+                <div class="dragdealer" id="vote-slider" >
+				    <div class="handle red-bar">X</div>
+			    </div>
+            </div>
 			<div class="col-sm-1">
 			</div>
 		</div>
