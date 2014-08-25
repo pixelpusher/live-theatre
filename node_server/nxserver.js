@@ -7,6 +7,8 @@
 */
 
 
+var participantsDataStore = './data/participants.db';
+
 var connect = require('connect'),
     http = require('http'),
     app = connect().use(connect.static(__dirname)).listen(8080),
@@ -14,6 +16,106 @@ var connect = require('connect'),
     osc = require('node-osc'),
     client = new osc.Client('localhost', 4040);
     console.log("http server on 8080, osc client on 4040");
+
+
+var  Datastore = require('nedb'),
+      participantsDB = new Datastore({ filename: participantsDataStore });
+
+participantsDB.loadDatabase(function (err) 
+{
+  // Now commands will be executed
+  console.log('participants database loaded from ' + participantsDataStore)
+  if (err) console.log ('NEDB ERROR: ' + err);
+
+  // compact the DB file at start? shouldn't take more than 100ms:
+  //participantsDB.persistence.compactDatafile();
+
+});
+
+/*
+
+// START TESTING DB ////////////
+var rightNow = new Date();
+var yesterday = new Date();
+
+yesterday.setDate( rightNow.getDate() - 1 );
+
+var testParticipant = 
+{ 
+  email: 'evanraskob@gmail.com',
+  time: rightNow
+};
+
+var testParticipant2 = 
+{ 
+  email: 'evan@gmail.com',
+  time: yesterday
+};
+
+participantsDB.insert(testParticipant, function (err, newDoc) {   // Callback is optional
+  
+  // newDoc is the newly inserted document, including its _id
+  console.log('//DB TEST: inserted into DB:')
+  console.log(newDoc);
+  console.log('//DB TEST');
+
+  if (err) 
+  { 
+    console.log('there was an error writing to the db: ' + err); 
+  }
+});
+
+// insert without check...
+participantsDB.insert(testParticipant2);
+
+
+console.log('find all db records matching evanraskob');
+
+participantsDB.find({ email: 'evanraskob' }, function (err, docs) {
+  // docs is an array containing documents Mars, Earth, Jupiter
+  // If no document is found, docs is equal to []
+
+  console.log('DB TEST SEARCH:');
+  
+  if (err) {
+    console.log('there was an error reading from the db: ' + err);
+  }
+  else
+  {
+    console.log('docs found: ' + docs.length);
+    console.log('DOCS:');
+    console.log(docs);
+  }
+
+});
+
+
+// Finding all records before now
+
+
+participantsDB.find({ time: { $lt: new Date() } }, function (err, docs) {
+
+console.log('find all db records before now');
+
+  // docs is an array containing documents Mars, Earth, Jupiter
+  // If no document is found, docs is equal to []
+
+  console.log('DB TEST SEARCH:');
+  
+  if (err) {
+    console.log('there was an error reading from the db: ' + err);
+  }
+  else
+  {
+    console.log('docs found: ' + docs.length);
+    console.log('DOCS:');
+    console.log(docs);
+  }
+
+});
+*/
+
+// END TESTING DB ////////////
 
 
 
@@ -70,11 +172,20 @@ function receiveVote(vote)
   {
     // sanity check on vote
     var voteVal = (!vote || vote == undefined || isNaN(vote) ) ? 0 : parseInt(vote,10);
-    
     voteTally += vote;
     votes++; 
-    averageVote = voteTally / votes; // votes should never be 0 because of above line
 
+    // use moving average...
+    if (voteTally > 9)
+    {
+      averageVote -= averageVote / 10;
+      averageVote += vote / 10;
+    }
+    else
+    {
+      averageVote = voteTally / votes; // votes should never be 0 because of above line
+    }
+    
     // could send average vote here but might be too much traffic!
   }
 }
@@ -280,7 +391,23 @@ function receiveImgVote(vote)
 
 
 
+function receiveEmail( email)
+{
+  // TODO: security checks, etc.
+  // just stick it in the database for now...
+  //
+  console.log('email received:' + email);
+  if (email) {
+    email = email +"";
+    // do a quick sanity check...
+    var regex = /^\S+@\S+\.\S+$/;
 
+    if (email.match(regex))
+      participantsDB.insert({email: email, time: new Date() });
+    else
+      console.log('invalid email address sent: ' + email + ' at ' + new Date());
+  }
+}
 
 
 
@@ -351,6 +478,10 @@ io.sockets.on('connection', function (socket)
 
       io.sockets.emit('jumpto', index);
     });
+
+
+    // store emails in database
+    socket.on('e', receiveEmail);
 
     // for slide 3 - voting system
     socket.on('vote', receiveVote);

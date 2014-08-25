@@ -197,9 +197,28 @@ var thisUser = {
 		    });
 		}
 
+		$('#email').on('click', function()
+		{
+			$(this).val("");
+		});
 		
-	
+
+		$('#email-button').on('click', function()
+		{
+
+			var email = $('#email').val();
+			console.log('sending email: ' + email);
+			socket.emit('e', email);
+			$(this).addClass('disabled')
+							.off()
+							.html('sent!');	
+		});
+
 	});
+	//
+	// end document onready
+	//
+
 
 
 	//

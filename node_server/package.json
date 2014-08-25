@@ -18,21 +18,19 @@
     "email": "info@pixelist.info",
     "homepage": "http://pixelist.info/"
   },
-
   "repository": {
     "type": "git",
     "url": "https://github.com/live-performance/live-performance.git"
   },
   "dependencies": {
-    "connect": "2.9.1", 
+    "connect": "2.9.1",
     "node-osc": "0.2.1",
-    "socket.io": "1.0.6"
+    "socket.io": "1.0.6",
+    "nedb": "~0.11.0"
   },
-
   "engines": {
     "node": ">= 0.10.0"
   },
-  
   "readme": "live-performance\n=========\n\n#### An experimental perfornance App\n\n",
   "_id": "live-performance@0.1",
   "_from": "live-performance@0.1"

@@ -16,6 +16,11 @@
     		height:20%;
     	}
 
+        #section1 .row
+        {
+            margin: 6% 0; 
+        }
+        
     	.draggable {
 			padding:0;
 			height:100%;
@@ -166,16 +171,28 @@
 </head>
 <body>
 <div id="fullpage">
-	
-	<div class="section active container"  id="section1">
+    
+    	<div class="section active" id="section1">
+            <div class="container">
 	<!-- audience registration -->
-	<!-- TODO: VISUAL REPRESENTATION OF THE AUDIENCE REGISTERING -->
-
-		<div class="row">
-		  <div class="col-sm-12">
-		    <h1 id="buttons" class="page-header">Registration</h1>
-		  </div>
-		</div>
+     
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Please register your email for updates:</div>
+                        
+                        <div class="panel-body">
+                        <form action="javascript:(void)" >
+                            <input id="email" type="text" value="you@somewhere.com" />
+                        </form>
+                            <br />
+                            <p>
+                            <a href="#" id="email-button" class="btn btn-large btn-success">register</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+        </div>
 	</div>
 
 
@@ -206,8 +223,8 @@
 			</div>	
 			<div class="col-sm-10">
 				<div class="btn-group btn-group-justified">
-					<a href="#" id="vote-left" class="btn btn-primary btn-lg">Left</a>
-                	<a href="#" id="vote-right" class="btn btn-primary btn-lg">Right</a>
+					<a href="#" id="vote-left" class="btn btn-primary btn-lg">tired limbs</a>
+                	<a href="#" id="vote-right" class="btn btn-primary btn-lg">furious flies</a>
 				</div>				
 			</div>
 			<div class="col-sm-1">
@@ -234,7 +251,7 @@
 			<div class="col-sm-8">
 			</div>
 			<div class="col-sm-4">	
-				<button id="finish-button" class="btn btn-success disabled">order the images first</button>
+				<a href="#" id="finish-button" class="btn btn-success disabled">order the images first</a>
 			</div>
 		</div>
 
