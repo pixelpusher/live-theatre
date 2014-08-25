@@ -9,7 +9,8 @@
 
 var socket = io.connect('http://localhost:8080');
 
-//var socket = io.connect('http://192.168.1.68:80');
+//var socket = io.connect('http://10.0.0.21:80');
+
 var thisUser = {
 	name: "phone" + Math.floor(Math.random()*10000000000)
 };
@@ -24,8 +25,8 @@ var thisUser = {
 
 
 	function preventEvent ( event ){
-		console.log('prevented');
-	event.preventDefault();
+		//console.log('prevented');
+		event.preventDefault();
 	}
 
 
@@ -33,8 +34,47 @@ var thisUser = {
 	$(document).ready(function() {
 		voteSlider = new Dragdealer('vote-slider');
 
+		var section5Rows = 6;
+
+        $('#section5 .row').css('height', ($(window).height()/section5Rows) + 'px');
+
 		$('#fullpage').fullpage({
 			sectionsColor: ['#000', '#200', '#000', '#002', '#000', '#022', '#000','#202'],
+			afterLoad: function(anchorLink, index) {
+				if (index == 5)
+				{
+					//console.log('section 5');
+					var sec5Imgs = $('#section5 .row img');
+					if (sec5Imgs.length > 0) 
+					{
+						var h = sec5Imgs[0].height;
+						var w = sec5Imgs[0].width;
+						
+						$('.replaceme').height( h );
+						$('.replaceme').width( w );
+						$('li').height( h );
+					}
+				}
+			},
+
+			afterResize: function() 
+            {
+                var windowsHeight = $(window).height();
+
+                $('#section5 .row').css('height', (windowsHeight/section5Rows) + 'px');
+
+                // TODO: consolide with above code
+                var sec5Imgs = $('#section5 .row img');
+					if (sec5Imgs.length > 0) 
+					{
+						var h = sec5Imgs[0].height;
+						var w = sec5Imgs[0].width;
+						
+						$('.replaceme').height( h );
+						$('.replaceme').width( w );
+						$('li').height( h );
+					}
+            }
 		});
 		// turn of scrolling - this is done by the 'conductor' only
 		$.fn.fullpage.setAllowScrolling(false);
@@ -48,7 +88,13 @@ var thisUser = {
 	      revert: "invalid", // when not dropped, the item will revert back to its initial position
 	      containment: "document",
 	      //helper: "clone",
-	      cursor: "move"
+	      cursor: "move", 
+	      start: function(){
+     	   //get the start position
+        	var start = {left: $(this).position().left, top:$(this).position().top};
+        	//store the start position on this element
+        	$(this).data('start', start);
+    	  }
 		});
 	    
 	    var i=3;
@@ -77,12 +123,23 @@ var thisUser = {
 
 			        me.addClass( "target-dropped" )
 			          .find( ".replaceme")
+			           	// TODO: make this work!
+			          	//.replaceWith('<div class="replaceme"><a class="boxclose"></a><img src='+src + ' /></div>')
 			          	.replaceWith('<div class="replaceme"><img src='+src + ' /></div>')
 			          	.end();
 			          
+			        var sec5Imgs = $('#section5 .row img');
+					if (sec5Imgs.length > 0) 
+					{
+						var h = sec5Imgs[0].height;
+						var w = sec5Imgs[0].width;
+						
+						$('.replaceme').height( h );
+						$('.replaceme').width( w );
+					}
 
 			        // check class to keep track...
-			        // TODO: find a better way...
+			        // TODO: find a better way... regex match of class would be better
 			        if (ui.draggable.hasClass('choice-0'))
 			        {
 			        	chosenImages[0] = me.data('targetIndex');
@@ -98,24 +155,49 @@ var thisUser = {
 			        	
 
 			        ui.draggable.fadeOut(function() {
-			        	ui.draggable.remove();	
+			        	//ui.draggable.remove();	
+			        	
+			        	//determine the start/end positions
+				        
+				        //var end = {left: $(this).position().left, top: $(this).position().top } ;
+				        var start = $(this).data('start');
+				        
+				        $(this).css({top: start.top, left: start.left});
+				        $(this).find('img').css({border: 'none', opacity:0.3});
+				        ui.draggable.draggable("disable", 1);
+
+				        $(this).fadeIn();
+
 			        });
+
 			  	}
-		      }
+		      
+
+			      // check if all 3 images have been dropped and finish button can be activated
+			      var totalDropped = $('.target-dropped').length;
+			      
+			      if (totalDropped == 3) 
+			      {
+					$('#finish-button').removeClass('disabled').html('send vote!');
+
+					// this should broadcast image results back to server...
+					$('#finish-button').click( function() {
+
+						socket.emit('images', chosenImages);
+
+						//console.log( chosenImages);
+
+						$('#finish-button').addClass('disabled')
+							.off()
+							.html('sent!');	
+					});
+
+			      }
+			  }
 		    });
 		}
 
-		// this should broadcast image results back to server...
-		$('#finish-button').click( function() {
-			socket.emit('images', chosenImages);
-
-			console.log( chosenImages);
-
-			$('#finish-button').addClass('disabled')
-				.off()
-				.html('sent!');
-
-		});
+		
 	
 	});
 
@@ -201,8 +283,9 @@ var thisUser = {
 
 	});
 
-
+/*
 	nx.onload = function() {
 		nx.sendsTo("node") 
 	};
+*/
 })();

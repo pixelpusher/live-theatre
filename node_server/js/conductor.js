@@ -19,7 +19,7 @@
 	//var socket = io.connect('http://192.168.0.7:8080');
 
 	var socket = io.connect('http://localhost:8080');
-	//var socket = io.connect('http://192.168.1.68:80');
+	//var socket = io.connect('http://10.0.0.21:80');
 
 	//
 	// socket.io callback functions
