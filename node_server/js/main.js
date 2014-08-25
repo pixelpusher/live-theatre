@@ -7,9 +7,9 @@
 
 //change LOCALHOST to your IP to enable connecting from other devices
 
-var socket = io.connect('http://localhost:8080');
+//var socket = io.connect('http://localhost:8080');
 
-//var socket = io.connect('http://10.0.0.21:80');
+var socket = io.connect('http://192.168.0.33:80');
 
 var thisUser = {
 	name: "phone" + Math.floor(Math.random()*10000000000)
