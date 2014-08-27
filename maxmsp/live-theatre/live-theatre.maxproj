@@ -2,7 +2,7 @@
 	"name" : "live-theatre",
 	"version" : 1,
 	"creationdate" : 3492010709,
-	"modificationdate" : 3492018411,
+	"modificationdate" : 3492018786,
 	"viewrect" : [ 46.0, 79.0, 793.0, 504.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
@@ -48,12 +48,7 @@
 ,
 			"spl.Hanning.maxpat" : 			{
 				"kind" : "patcher",
-				"local" : 1,
-				"singleton" : 				{
-					"bootpath" : "/Users/nick/CASSIEL/maxsearch/senses-places",
-					"projectrelativepath" : "../../../../../CASSIEL/maxsearch/senses-places"
-				}
-
+				"local" : 1
 			}
 ,
 			"OSC-test-client.maxpat" : 			{
