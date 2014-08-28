@@ -470,6 +470,31 @@ io.sockets.on('connection', function (socket)
       io.sockets.emit('tovispage', data);
     });
 
+    socket.on('MaxMSPState', function (state) {
+      //console.log("max msp state change:");
+
+      switch(state)
+      {
+        // turn off audio (voting system)
+        case 0: client.send("/state", 0);
+        //console.log('stopping audio');
+        break;
+
+        // turn on audio (voting system)
+        case 1: client.send("/state", 1); 
+        //console.log('starting audio');
+        break;
+
+        // turn off audio (image chooser)
+        case 2: // nothing right now...
+        break;
+
+        // turn on audio (image chooser)
+        case 3: // nothing right now... 
+        break;
+      }
+    });
+
     // when jumpAllTo msg received from conductor, move all clients to the scroll index
     socket.on('jumpAllTo', function (index) {
       console.log('jumpAllTo:' + index);
