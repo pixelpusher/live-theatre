@@ -56,8 +56,9 @@ var thisUser = {
 					}
 				}
 			},
-
-			afterResize: function() 
+			/*
+			afterResize: 
+			function() 
             {
                 var windowsHeight = $(window).height();
 
@@ -75,6 +76,7 @@ var thisUser = {
 						$('li').height( h );
 					}
             }
+            */
 		});
 		// turn of scrolling - this is done by the 'conductor' only
 		$.fn.fullpage.setAllowScrolling(false);
