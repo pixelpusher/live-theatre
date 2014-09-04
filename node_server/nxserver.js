@@ -10,7 +10,7 @@
 var participantsDataStore = './data/participants.db';
 
 var connect = require('connect'),
-    http = require('http'),
+    //http = require('http'),
     app = connect().use(connect.static(__dirname)).listen(8080),
     io = require('socket.io').listen(app);
     osc = require('node-osc'),
